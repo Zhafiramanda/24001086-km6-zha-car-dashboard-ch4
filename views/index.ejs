@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Font Awesome CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/public/css/main.css" />
+</head>
+<body>
+  <article style="width: 79%; background: #e5e5e5; padding-left: 25px">
+    <section class="breadcrumb" style="margin-top: 85px">
+      <nav style="--bs-breadcrumb-divider: url('data:image/svg+xml,%3Csvgxmlns='http://www.w3.org/2000/svg'width='8'height='8'%3E%3Cpathd='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z'fill='currentColor'/%3E%3C/svg%3E%22);">
+        <ol class="breadcrumb" style="font-size: 14px">
+          <li class="breadcrumb-item">
+            <a href="/" style="text-decoration: none; color: black">Home</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="/cars" style="text-decoration: none; color: black">List Car</a>
+          </li>
+        </ol>
+      </nav>
+    </section>
+    <section class="d-flex justify-content-between align-items-center" style="width: 98%">
+      <h1 style="font-size: 20px">List Car</h1>
+      <a href="/add" class="btn d-flex" style="gap: 10px; background: #5cb85f">
+        <div><img src="./assets/fi_plus.png" alt="add icon" /></div>
+        <span class="text-white">Add New Car</span>
+      </a>
+    </section>
+    <section class="mt-3 d-flex" style="gap: 10px">
+      <a id="filter-all" href="#" class="text-decoration-none text-dark border border-secondary px-3 py-1 shadow-sm rounded" style="background: #cfd4ed">All</a>
+      <a id="filter-small" href="#" class="text-decoration-none text-dark border border-secondary px-3 py-1 shadow-sm rounded">Small</a>
+      <a id="filter-medium" href="#" class="text-decoration-none text-dark border border-secondary px-3 py-1 shadow-sm rounded">Medium</a>
+      <a id="filter-large" href="#" class="text-decoration-none text-dark border border-secondary px-3 py-1 shadow-sm rounded">Large</a>
+    </section>
+    <section class="row mt-3 m-0" style="width: 98%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+      <% cars.forEach(function(car) { %>
+      <div class="card" style="width: 18rem" data-size="<%= car.size %>">
+        <div class="card-body">
+          <h5 class="card-title"><%= car.name %></h5>
+          <p class="card-text">Rp <%= car.price %> / hari</p>
+          <!-- Last updated information -->
+          <% const updatedAtDate = new Date(car.updatedAt); %>
+          <p class="last-updated">
+            <i class="far fa-clock"></i> Updated at:
+            <span class="text-muted">
+              <%= updatedAtDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %> <%= updatedAtDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) %>
+            </span>
+          </p>
+          <!-- Button untuk edit -->
+          <a href="/edit" class="btn btn-success"><i class="fas fa-edit"></i> Edit</a>
+          <!-- Button untuk delete -->
+          <form action="" method="POST" style="display: inline" onsubmit="return confirm('Are you sure you want to delete this car?');">
+            <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
+          </form>
+        </div>
+      </div>
+      <% }); %>
+    </section>
+    <% message.forEach(element => { %>
+    <div class="alert alert-dismissible fade show <% if (element.length > 20) { %>alert-success<% } else { %>alert-info<% } %>" role="alert">
+      <%= element %>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <% }); %>
+  </article>
+
+  <!-- JavaScript for filter functionality -->
+  <script>
+    // Function to filter cars based on size
+    function filterCars(size) {
+      const cars = document.querySelectorAll(".card");
+
+      cars.forEach((car) => {
+        const carSize = car.dataset.size.toLowerCase();
+
+        // If the car's size matches the selected size, display it, otherwise hide it
+        if (carSize === size || size === "all") {
+          car.style.display = "block";
+        } else {
+          car.style.display = "none";
+        }
+      });
+    }
+
+    // Event listeners for filter buttons
+    document.getElementById("filter-all").addEventListener("click", (event) => {
+      event.preventDefault();
+      filterCars("all");
+    });
+
+    document.getElementById("filter-small").addEventListener("click", (event) => {
+      event.preventDefault();
+      filterCars("small");
+    });
+
+    document.getElementById("filter-medium").addEventListener("click", (event) => {
+      event.preventDefault();
+      filterCars("medium");
+    });
+
+    document.getElementById("filter-large").addEventListener("click", (event) => {
+      event.preventDefault();
+      filterCars("large");
+    });
+  </script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <!-- Font Awesome JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
